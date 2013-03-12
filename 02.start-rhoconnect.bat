@@ -1,0 +1,2 @@
+call rhoconnect start
+pause

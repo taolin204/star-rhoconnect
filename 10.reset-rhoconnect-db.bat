@@ -1,0 +1,2 @@
+call rhoconnect flushdb
+pause
