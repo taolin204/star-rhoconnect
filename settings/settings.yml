@@ -3,7 +3,9 @@
   Company:
     :poll_interval: 30
   Interviewee:
-    :poll_interval: 300
+    :poll_interval: 30
+  Schedule:
+    :poll_interval: 30
 
 :development:
   :licensefile: settings/license.key
