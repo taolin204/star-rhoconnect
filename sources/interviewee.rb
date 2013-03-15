@@ -1,8 +1,5 @@
-require 'json'
-require 'rest_client'
-
-class Company < SourceAdapter
-  def initialize(source)
+class Interviewee < SourceAdapter
+  def initialize(source) 
     @base = 'http://192.168.2.22:3000' 
     super(source)
   end
@@ -20,8 +17,8 @@ class Company < SourceAdapter
     #   "1"=>{"name"=>"Acme", "industry"=>"Electronics"},
     #   "2"=>{"name"=>"Best", "industry"=>"Software"}
     # }
-    puts "calling query #{@base}/companies.json?auth_token=#{@token}"
-    rest_result = RestClient.get("#{@base}/companies.json?auth_token=#{@token}").body
+    puts "calling query #{@base}/interviewees.json?auth_token=#{@token}"
+    rest_result = RestClient.get("#{@base}/interviewees.json?auth_token=#{@token}").body
     if rest_result.code != 200
       raise SourceAdapterException.new("Error connecting!")
     end
@@ -30,39 +27,46 @@ class Company < SourceAdapter
 
     @result={}
     parsed.each do |item|
-      # @result[item["company"]["id"].to_s] = item["company"]
       @result[item["id"].to_s] = {
         :name           => item["name"],
-        :address        => item["address"],
-        :contact_number => item["contact_number"],
-        :contact_person => item["contact_person"],
-        :postal_code    => item["postal_code"]
+        :first_name     => item["first_name"],
+        :last_name      => item["last_name"],
+        :nationality    => item["nationality"],
+        :postal_code    => item["postal_code"],
+        :gender         => item["gender"],
+        :race           => item["race"],
+        :mobile         => item["mobile"],
+        :telephone      => item["telephone"],
+        :religion       => item["religion"],
+        :email          => item["email"],
+        :dob            => item["dob"],
+        :specialization => item["specialization"],
+        :prefer_industry=> item["prefer_industry"],
+        :country        => item["country"],
+        :state          => item["state"],
+        :willing_travel => item["willing_travel"],
+        :willing_relocate => item["willing_relocate"],
+        :job_nature     => item["job_nature"],
+        :language       => item["language"],
+        :remark         => item["remark"]
       }
     end if parsed
-    # return @result
-    # raise SourceAdapterException.new("Please provide some code to read records from the backend data source")
+    #raise SourceAdapterException.new("Please provide some code to read records from the backend data source")
   end
  
   def sync
     # Manipulate @result before it is saved, or save it 
     # yourself using the Rhoconnect::Store interface.
     # By default, super is called below which simply saves @result
-    # TL- Disable 'super', copy the code from query.
     super
-
   end
  
   def create(create_hash)
-    # TODO: Create a new record in your backend data source
-    puts "calling create #{@base}/companies?auth_token=#{@token}"
-    res = RestClient.post("#{@base}/companies?auth_token=#{@token}",{:company => create_hash, :content_type => :json, :accept => :json})
+    puts "calling create #{@base}/interviewees?auth_token=#{@token}"
+    res = RestClient.post("#{@base}/interviewees?auth_token=#{@token}",{:interviewee => create_hash, :content_type => :json, :accept => :json})
     puts "create results: #{res}"
+    # TODO: Create a new record in your backend data source
     # raise "Please provide some code to create a single record in the backend data source using the create_hash"
-    # After create we are redirected to the new record.
-    # We need to get the id of that record and return
-    # it as part of create so rhosync can establish a link
-    # from its temporary object on the client to this newly
-    # created object on the server
     JSON.parse( res.body )["id"]
   end
  
@@ -70,8 +74,8 @@ class Company < SourceAdapter
     # TODO: Update an existing record in your backend data source
     obj_id = update_hash['id']
     update_hash.delete('id')
-    puts "calling update #{@base}/companies/#{obj_id}?auth_token=#{@token}"
-    res = RestClient.put("#{@base}/companies/#{obj_id}?auth_token=#{@token}", {:company => update_hash, :content_type => :json, :accept => :json})
+    puts "calling update #{@base}/interviewees/#{obj_id}?auth_token=#{@token}"
+    res = RestClient.put("#{@base}/interviewees/#{obj_id}?auth_token=#{@token}", {:interviewee => update_hash, :content_type => :json, :accept => :json})
     puts "update results: #{res}"
     # raise "Please provide some code to update a single record in the backend data source using the update_hash"
   end
@@ -83,8 +87,8 @@ class Company < SourceAdapter
     # raise "Please provide some code to delete a single object in the backend application using the object_id"
     if delete_hash['id']
       puts "calling delete"
-      puts "Calling destroy on #{@base}/companies/#{delete_hash['id']}?auth_token=#{@token}"
-      res = RestClient.delete("#{@base}/companies/#{delete_hash['id']}?auth_token=#{@token}")
+      puts "Calling destroy on #{@base}/interviewees/#{delete_hash['id']}?auth_token=#{@token}"
+      res = RestClient.delete("#{@base}/interviewees/#{delete_hash['id']}?auth_token=#{@token}")
     else
       puts "no delete_hash['id']"
     end

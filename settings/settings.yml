@@ -2,6 +2,8 @@
 :sources:
   Company:
     :poll_interval: 30
+  Interviewee:
+    :poll_interval: 300
 
 :development:
   :licensefile: settings/license.key
